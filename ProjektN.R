@@ -61,7 +61,7 @@ for(j in 1:length(elems)){
 write.csv(wektorLinkow, file ="myVectors.csv", row.names=FALSE)
 
 
-length(wektorLinkow) # 5965 filmy sieriale, stan na 12.08.2021 
+length(wektorLinkow) # 5982 filmy sieriale, stan na 12.08.2021 
 ?smartbind
 df1<- NULL
 # pobranie danych filmów na podstawie pozyskanych wczesniej linkow
@@ -146,7 +146,7 @@ for (i in 1: nrow(movies)) {
   
 }
 movies$rating <- as.numeric(str_replace_all(movies$rating, "\\/\\d+", "") ) # zmiana ratingu na numeric i usuniecie /10
-movies$Added.to.Netflix.year <- as.numeric(movies$Added.to.Netflix.year)
+movies$Added.to.Netflix.year <- as.numeric(movies$Added.to.Netflix.year) # zmiana roku na numeric
 
 # dodanie main_genre do ramki danych 
 movies$main_genre <- str_replace_all(movies$Genres., "^.*,", "")
@@ -172,7 +172,7 @@ moviesCast <- movies%>%
   mutate(Cast. = str_trim(unpacked))
 
 View(moviesCast)
-mostPopActor <- names(which.max(table(moviesCast$Cast.)))
+mostPopActor <- names(which.max(table(moviesCast$Cast.))) # najpopularniejszy aktor
 
 moviesActor <- moviesCast%>%filter(Cast.==mostPopActor)%>%collect() 
 actorsList <-  moviesCast%>% group_by(Cast.)%>%tally(sort = TRUE)%>%na.omit()
@@ -224,7 +224,7 @@ moviesTopGenre <- movies%>%
   unnest(cols = c(unpacked)) %>%
   mutate(Genres.= str_trim(unpacked))
 
-moviesTopGenreList <-  moviesTopGenre%>% group_by(Genres.)%>%tally(sort = TRUE)%>%na.omit() # lnajpopularniejsze gatunki na Netfliksie
+moviesTopGenreList <-  moviesTopGenre%>% group_by(Genres.)%>%tally(sort = TRUE)%>%na.omit() # najpopularniejsze gatunki na Netfliksie
 plot <- ggplot(moviesTopGenreList[1:10,], aes(x=Genres., y=n)) + 
   geom_bar(stat="identity")+
   xlab("genre")+
